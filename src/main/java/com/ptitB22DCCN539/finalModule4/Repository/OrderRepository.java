@@ -8,6 +8,6 @@ import java.sql.Date;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
-    @Query(value = "SELECT o FROM OrderEntity o WHERE (?1 IS NULL OR o.dateCreated >= ?1) AND (?2 IS NULL OR o.dateCreated <= ?2)")
-    public List<OrderEntity> find(Date dateStart, Date dateEnd);
+    @Query(value = "SELECT o FROM OrderEntity o WHERE (?1 IS NULL OR o.dateCreated >= ?1) AND (?2 IS NULL OR o.dateCreated <= ?2) LIMIT 0, 10")
+    public List<OrderEntity> find(Date dateStart, Date dateEnd, Integer pageSize, Long offset);
 }

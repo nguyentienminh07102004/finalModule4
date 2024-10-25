@@ -4,6 +4,8 @@ import com.ptitB22DCCN539.finalModule4.Model.OrderEntity;
 import com.ptitB22DCCN539.finalModule4.Model.OrderResponse;
 import com.ptitB22DCCN539.finalModule4.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -16,9 +18,12 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderResponse> getAllOrders(String dateStart, String dateEnd, Long orderMax) {
+    public List<OrderResponse> getAllOrders(String dateStart, String dateEnd, Long orderMax, Integer page, Integer limit) {
         try {
             Date startDate = null;
+            Integer currentPage = page == null ? 1 : page;
+            Integer pageSize = limit == null ? 3 : limit;
+            Pageable pageable = PageRequest.of(currentPage, pageSize);
             Date endDate = null;
             if(dateStart != null && !dateStart.isEmpty()) {
                 startDate = Date.valueOf(dateStart);
@@ -26,7 +31,7 @@ public class OrderService implements IOrderService {
             if(dateEnd != null && !dateEnd.isEmpty()) {
                 endDate = Date.valueOf(dateEnd);
             }
-            List<OrderEntity> orderEntities = orderRepository.find(startDate, endDate);
+            List<OrderEntity> orderEntities = orderRepository.find(startDate, endDate, pageable.getPageSize(), pageable.getOffset());
             List<OrderResponse> responses = orderEntities.stream()
                     .map(item -> OrderResponse.builder()
                             .id(item.getId())

@@ -19,9 +19,11 @@ public class OrderController {
     @GetMapping(value = "/list")
     public ModelAndView listOrder(@RequestParam(value = "dateStart", required = false) String dateStart,
                                   @RequestParam(value = "dateEnd", required = false) String dateEnd,
-                                  @RequestParam(value = "orderMax", required = false) Long orderMax) {
+                                  @RequestParam(value = "orderMax", required = false) Long orderMax,
+                                  @RequestParam(value = "page", required = false) Integer page,
+                                  @RequestParam(value = "limit", required = false) Integer limit) {
         ModelAndView mav = new ModelAndView("/list");
-        List<OrderResponse> list = orderService.getAllOrders(dateStart, dateEnd, orderMax);
+        List<OrderResponse> list = orderService.getAllOrders(dateStart, dateEnd, orderMax, page, limit);
         mav.addObject("listOrders", list);
         return mav;
     }
